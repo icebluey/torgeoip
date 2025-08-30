@@ -28,7 +28,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: 0
@@ -38,18 +38,18 @@ jobs:
 
       - run: mkdir public
       - run: ls ${{ github.workspace }}
-      - run: sudo apt-get update
-      - run: sudo apt install -y build-essential debhelper dh-python git asciidoc intltool libpython3-dev libssl-dev libsystemd-dev python3-dev pkg-config systemd xsltproc docbook-xsl wget cargo
-      - run: wget https://source.ipfire.org/releases/libloc/libloc-0.9.17.tar.gz
-      - run: echo "87f28415c0656351b27bc564cda1dd0ed7cb1dc3fd406492d2b6ad9a2cf1733c libloc-0.9.17.tar.gz" | sha256sum -c
-      - run: tar xf libloc-0.9.17.tar.gz
-      - working-directory: ./libloc-0.9.17
+      - run: sudo apt update -y -qqq
+      - run: sudo apt install -y -qqq build-essential debhelper dh-python git asciidoc intltool libpython3-dev libssl-dev libsystemd-dev python3-dev pkg-config systemd xsltproc docbook-xsl wget cargo
+      - run: wget https://source.ipfire.org/releases/libloc/libloc-0.9.18.tar.gz
+      - run: echo "16c76689fa0ea8ece4fca6abcf942f236c48440387bee1d9331ea937ccd7b87d  libloc-0.9.18.tar.gz" | sha256sum -c
+      - run: tar -xof libloc-0.9.18.tar.gz
+      - working-directory: ./libloc-0.9.18
         run: ./autogen.sh
-      - working-directory: ./libloc-0.9.17
+      - working-directory: ./libloc-0.9.18
         run: ./configure CFLAGS='-g -O0' --prefix=/usr --sysconfdir=/etc --libdir=/usr/lib --with-database-path=${{ github.workspace }}/database.db
-      - working-directory: ./libloc-0.9.17
+      - working-directory: ./libloc-0.9.18
         run: make
-      - working-directory: ./libloc-0.9.17
+      - working-directory: ./libloc-0.9.18
         run: sudo make install
       - run: git clone --depth 1 https://git.torproject.org/tor.git
 
@@ -79,12 +79,12 @@ jobs:
       - run: rm ./public/geoip-dump.txt
       - run: ls ./public
 
-      - name: Zip folder
-        run: zip -r -q -j -9 ./geoip.zip ./public/
+      - name: tar files
+        run: tar -Jcvf geoip.tar.xz -C public .
 
       - name: Create Release
         id: create_release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
           tag_name: "${{ env.version }}"
@@ -92,15 +92,4 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            geoip.zip
-
-#      - name: Upload Release Asset
-#        id: upload-release-asset 
-#        uses: actions/upload-release-asset@v1
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          upload_url: ${{ steps.create_release.outputs.upload_url }} 
-#          asset_path: ./geoip.zip
-#          asset_name: geoip.zip
-#          asset_content_type: application/zip
+            geoip.tar.xz
