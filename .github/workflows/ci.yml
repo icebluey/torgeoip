@@ -46,7 +46,7 @@ jobs:
       - working-directory: ./libloc-0.9.18
         run: ./autogen.sh
       - working-directory: ./libloc-0.9.18
-        run: ./configure CFLAGS='-g -O0' --prefix=/usr --sysconfdir=/etc --libdir=/usr/lib --with-database-path=${{ github.workspace }}/database.db
+        run: ./configure CFLAGS='-g -O0' --prefix=/usr --sysconfdir=/etc --libdir=/usr/lib --with-database-path=${{ github.workspace }}/database.db --disable-lua --disable-man-pages
       - working-directory: ./libloc-0.9.18
         run: make
       - working-directory: ./libloc-0.9.18
