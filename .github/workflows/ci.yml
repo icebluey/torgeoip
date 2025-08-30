@@ -58,7 +58,7 @@ jobs:
       - run: PYTHONPATH=${{ env.pythonsite }} location dump ${{ github.workspace }}/public/geoip-dump.txt
       #- run: version=$(date --date="$(PYTHONPATH=/usr/lib/python3.10/site-packages location version)" '+%Y%m%dT%H%m%SZ')
       - name: Set version env variable
-        run: echo "version=$(date --date="$(PYTHONPATH=${{ env.pythonsite }} location version)" '+%Y%m%dT%H%m%SZ')" >> $GITHUB_ENV
+        run: echo "version=$(TZ='UTC' date --date="$(PYTHONPATH=${{ env.pythonsite }} location version)" '+%Y%m%dT%H%m%SZ')" >> $GITHUB_ENV
       - working-directory: ./tor/scripts/maint/geoip/geoip-db-tool
         run: cargo run --release -- -i ${{ github.workspace }}/public/geoip-dump.txt
       - run: mv ./tor/scripts/maint/geoip/geoip-db-tool/geoip{,6} ./public/
@@ -67,7 +67,7 @@ jobs:
       - run: mv ./tor/scripts/maint/geoip/geoip-db-tool/asn.txt ./public/
       - run: mv ./tor/scripts/maint/geoip/geoip-db-tool/geoip ./public/geoip-plus-asn
       - run: mv ./tor/scripts/maint/geoip/geoip-db-tool/geoip6 ./public/geoip6-plus-asn
-      - run: printf "${{ env.version }}" > ./version
+      - run: echo "${{ env.version }}" > ./version
       - run: cp ./version ./public/
 
       - name: Commit and push changes
