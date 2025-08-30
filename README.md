@@ -2,19 +2,15 @@
 
 Fresh geoip files for Tor Expert Bundle.
 
-[![build](https://github.com/update692/geoip/actions/workflows/ci.yml/badge.svg)](https://github.com/update692/geoip/actions/workflows/ci.yml)
+[![build](https://github.com/icebluey/torgeoip/actions/workflows/ci.yml/badge.svg)](https://github.com/icebluey/torgeoip/actions/workflows/ci.yml)
 
 ## Download
 
 Permanent link to latest release data.
 
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/update692/geoip?style=flat)](https://github.com/update692/geoip/releases)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/icebluey/torgeoip?style=flat)](https://github.com/icebluey/torgeoip/releases)
 
-`https://github.com/update692/geoip/releases/latest/download/geoip.zip`
-
-## Download tool
-
-https://github.com/update692/geoip-dl
+`https://github.com/icebluey/torgeoip/releases/latest/download/geoip.tar.xz`
 
 ## Original project
 
