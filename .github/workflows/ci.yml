@@ -42,7 +42,16 @@ jobs:
       - run: sudo apt update -y -qqq
       - run: sudo apt autoremove --purge -y -qqq needrestart || true
       - run: sudo ln -svf ../usr/share/zoneinfo/UTC /etc/localtime; sudo DEBIAN_FRONTEND=noninteractive apt install -y tzdata; sudo dpkg-reconfigure --frontend noninteractive tzdata
-      - run: sudo apt install -y -qqq build-essential debhelper dh-python git asciidoc intltool libpython3-dev libssl-dev libsystemd-dev python3-dev pkg-config systemd xsltproc docbook-xsl wget cargo
+      - run: sudo apt install -y -qqq build-essential debhelper dh-python git asciidoc intltool libpython3-dev libssl-dev libsystemd-dev python3-dev pkg-config systemd xsltproc docbook-xsl wget
+
+      - name: Install latest stable rust version
+        run: |
+          /bin/rm -fr "$HOME/.cargo" "$HOME/.rustup"
+          curl --proto '=https' --tlsv1.3 -sSf https://sh.rustup.rs -o /tmp/install_rust_tmp.sh
+          bash /tmp/install_rust_tmp.sh -y
+          echo "PATH="$HOME/.cargo/bin:$PATH"" >> $GITHUB_ENV
+          rm -f /tmp/install_rust_tmp.sh
+
       - run: wget https://source.ipfire.org/releases/libloc/libloc-0.9.18.tar.gz
       - run: echo "16c76689fa0ea8ece4fca6abcf942f236c48440387bee1d9331ea937ccd7b87d  libloc-0.9.18.tar.gz" | sha256sum -c
       - run: tar -xof libloc-0.9.18.tar.gz
