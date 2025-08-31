@@ -46,7 +46,7 @@ jobs:
 
       - name: Install latest stable rust version
         run: |
-          /bin/rm -fr "$HOME/.cargo" "$HOME/.rustup"
+          /bin/rm -vfr "$HOME/.cargo" "$HOME/.rustup"
           curl --proto '=https' --tlsv1.3 -sSf https://sh.rustup.rs -o /tmp/install_rust_tmp.sh
           bash /tmp/install_rust_tmp.sh -y
           echo "PATH="$HOME/.cargo/bin:$PATH"" >> $GITHUB_ENV
@@ -60,7 +60,7 @@ jobs:
       - working-directory: ./libloc-0.9.18
         run: ./configure CFLAGS='-g -O0' --prefix=/usr --sysconfdir=/etc --libdir=/usr/lib --with-database-path=${{ github.workspace }}/database.db --disable-lua --disable-man-pages
       - working-directory: ./libloc-0.9.18
-        run: make
+        run: make -j$(nproc --all)
       - working-directory: ./libloc-0.9.18
         run: sudo make install
       - run: git clone --depth 1 https://git.torproject.org/tor.git
@@ -68,11 +68,13 @@ jobs:
       - run: ls ${{ env.pythonsite }}
       - run: PYTHONPATH=${{ env.pythonsite }} location --quiet update
       - run: PYTHONPATH=${{ env.pythonsite }} location dump ${{ github.workspace }}/public/geoip-dump.txt
-      #- run: version=$(date --date="$(PYTHONPATH=/usr/lib/python3.10/site-packages location version)" '+%Y%m%dT%H%m%SZ')
+      #- run: version=$(date -u --date="$(PYTHONPATH=/usr/lib/python3.10/site-packages location version)" '+%Y%m%dT%H%M%SZ')
       - name: Set version env variable
-        run: echo "version=$(date --date="$(PYTHONPATH=${{ env.pythonsite }} location version)" '+%Y%m%dT%H%m%SZ')" >> $GITHUB_ENV
+        run: echo "version=$(date -u --date="$(PYTHONPATH=${{ env.pythonsite }} location version)" '+%Y%m%dT%H%M%SZ')" >> $GITHUB_ENV
       - working-directory: ./tor/scripts/maint/geoip/geoip-db-tool
-        run: cargo run --release -- -i ${{ github.workspace }}/public/geoip-dump.txt
+        run: |
+          cargo --version
+          cargo run --release -- -i ${{ github.workspace }}/public/geoip-dump.txt
       - run: mv ./tor/scripts/maint/geoip/geoip-db-tool/geoip{,6} ./public/
       - working-directory: ./tor/scripts/maint/geoip/geoip-db-tool
         run: cargo run --release -- -i ${{ github.workspace }}/public/geoip-dump.txt --include-asn --output-asn asn.txt
