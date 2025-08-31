@@ -36,6 +36,7 @@ jobs:
       #- name: Set pythonsite env variable
       #  run: echo "pythonsite=$(python3 -m site --user-site)" >> $GITHUB_ENV
 
+      - run: pwd; /bin/ls -lah
       - run: mkdir public
       - run: ls ${{ github.workspace }}
       - run: sudo apt update -y -qqq
