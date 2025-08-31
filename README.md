@@ -2,7 +2,7 @@
 
 Fresh geoip files for Tor Expert Bundle.
 
-[![build](https://github.com/icebluey/torgeoip/actions/workflows/ci.yml/badge.svg)](https://github.com/icebluey/torgeoip/actions/workflows/ci.yml)
+[![build](https://github.com/icebluey/torgeoip/actions/workflows/build.yml/badge.svg)](https://github.com/icebluey/torgeoip/actions/workflows/build.yml)
 
 ## Download
 
