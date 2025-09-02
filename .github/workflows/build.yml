@@ -103,7 +103,7 @@ jobs:
       - run: ls -la ./public
 
       - name: tar files
-        run: tar -Jcvf geoip.tar.xz -C public .
+        run: cd public && tar -Jcvf ../geoip.tar.xz * && cd ..
 
       - name: Create Release
         id: create_release
