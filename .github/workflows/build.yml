@@ -70,8 +70,8 @@ jobs:
       - run: echo '/usr/lib/python3.10/site-packages' | sudo tee /usr/lib/python3/dist-packages/site-packages.pth
       #- run: ls ${{ env.pythonsite }}
       #- run: PYTHONPATH=${{ env.pythonsite }} location --quiet update
-      - run: rm -f /var/lib/location/database.db
-      - run: location --quiet update
+      - run: sudo rm -f /var/lib/location/database.db
+      - run: sudo location --quiet update
       - run: location dump ${{ github.workspace }}/public/geoip-dump.txt
       #- run: version=$(date -u --date="$(PYTHONPATH=/usr/lib/python3.10/site-packages location version)" '+%Y%m%dT%H%M%SZ')
       - name: Set version env variable
@@ -99,6 +99,7 @@ jobs:
 
       - run: rm ./public/geoip-dump.txt
       - run: ls ./public
+      - run: sudo chown root:root ./public/*
 
       - name: tar files
         run: tar -Jcvf geoip.tar.xz -C public .
