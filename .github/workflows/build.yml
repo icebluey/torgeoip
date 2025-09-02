@@ -22,8 +22,8 @@ jobs:
   build:
     runs-on: ubuntu-22.04
 
-    env:
-      pythonsite: /usr/lib/python3.10/site-packages
+    #env:
+    #  pythonsite: /usr/lib/python3.10/site-packages
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
