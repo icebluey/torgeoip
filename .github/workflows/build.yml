@@ -98,8 +98,9 @@ jobs:
           add: 'version'
 
       - run: rm ./public/geoip-dump.txt
-      - run: ls ./public
       - run: sudo chown root:root ./public/*
+      - run: sudo chmod 0644 ./public/*
+      - run: ls ./public
 
       - name: tar files
         run: tar -Jcvf geoip.tar.xz -C public .
