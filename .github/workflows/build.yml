@@ -62,19 +62,22 @@ jobs:
       - working-directory: ./libloc-0.9.18
         run: ./autogen.sh
       - working-directory: ./libloc-0.9.18
-        run: ./configure CFLAGS='-g -O0' --prefix=/usr --sysconfdir=/etc --libdir=/usr/lib --with-database-path=${{ github.workspace }}/database.db --disable-lua --disable-man-pages
+        run: ./configure CFLAGS='-g -O0' --prefix=/usr --libdir=/usr/lib/x86_64-linux-gnu --includedir=/usr/include --sysconfdir=/etc --localstatedir=/var --with-python_prefix=/usr --with-python_exec_prefix=/usr --disable-lua --disable-man-pages
       - working-directory: ./libloc-0.9.18
-        run: make -j$(nproc --all)
+        run: make -j$(nproc --all) all
       - working-directory: ./libloc-0.9.18
         run: sudo make install
-      - run: git clone --depth 1 https://git.torproject.org/tor.git
-
-      - run: ls ${{ env.pythonsite }}
-      - run: PYTHONPATH=${{ env.pythonsite }} location --quiet update
-      - run: PYTHONPATH=${{ env.pythonsite }} location dump ${{ github.workspace }}/public/geoip-dump.txt
+      - run: echo '/usr/lib/python3.10/site-packages' | sudo tee /usr/lib/python3/dist-packages/site-packages.pth
+      #- run: ls ${{ env.pythonsite }}
+      #- run: PYTHONPATH=${{ env.pythonsite }} location --quiet update
+      - run: rm -f /var/lib/location/database.db
+      - run: location --quiet update
+      - run: location dump ${{ github.workspace }}/public/geoip-dump.txt
       #- run: version=$(date -u --date="$(PYTHONPATH=/usr/lib/python3.10/site-packages location version)" '+%Y%m%dT%H%M%SZ')
       - name: Set version env variable
-        run: echo "version=$(date -u --date="$(PYTHONPATH=${{ env.pythonsite }} location version)" '+%Y%m%dT%H%M%SZ')" >> $GITHUB_ENV
+        run: echo "version=$(date -u --date="$(location version)" '+%Y%m%dT%H%M%SZ')" >> $GITHUB_ENV
+
+      - run: git clone --depth 1 https://git.torproject.org/tor.git
       - working-directory: ./tor/scripts/maint/geoip/geoip-db-tool
         run: |
           cargo --version
