@@ -10,7 +10,7 @@ on:
   #pull_request:
   #  branches: [ "master" ]
   schedule:
-    - cron: '1 0 * * *'
+    - cron: '0 0 * * *'
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -36,9 +36,13 @@ jobs:
       #- name: Set pythonsite env variable
       #  run: echo "pythonsite=$(python3 -m site --user-site)" >> $GITHUB_ENV
 
-      - run: pwd; /bin/ls -lah
+      - name: starting time
+        run: date -u -R
+      - name: current dir
+        run: pwd; /bin/ls -lah
       - run: mkdir public
-      - run: ls ${{ github.workspace }}
+      - name: ${{ github.workspace }}
+        run: ls -lah ${{ github.workspace }}
       - run: sudo apt update -y -qqq
       - run: sudo apt autoremove --purge -y -qqq needrestart || true
       - run: sudo ln -svf ../usr/share/zoneinfo/UTC /etc/localtime; sudo DEBIAN_FRONTEND=noninteractive apt install -y tzdata; sudo dpkg-reconfigure --frontend noninteractive tzdata
