@@ -59,13 +59,13 @@ jobs:
       - run: wget https://source.ipfire.org/releases/libloc/libloc-0.9.18.tar.gz
       - run: echo "16c76689fa0ea8ece4fca6abcf942f236c48440387bee1d9331ea937ccd7b87d  libloc-0.9.18.tar.gz" | sha256sum -c
       - run: tar -xof libloc-0.9.18.tar.gz
-      - working-directory: ./libloc-0.9.18
+      - working-directory: libloc-0.9.18
         run: ./autogen.sh
-      - working-directory: ./libloc-0.9.18
+      - working-directory: libloc-0.9.18
         run: ./configure CFLAGS='-g -O0' --prefix=/usr --libdir=/usr/lib/x86_64-linux-gnu --includedir=/usr/include --sysconfdir=/etc --localstatedir=/var --with-python_prefix=/usr --with-python_exec_prefix=/usr --disable-lua --disable-man-pages
-      - working-directory: ./libloc-0.9.18
+      - working-directory: libloc-0.9.18
         run: make -j$(nproc --all) all
-      - working-directory: ./libloc-0.9.18
+      - working-directory: libloc-0.9.18
         run: sudo make install
       - run: echo '/usr/lib/python3.10/site-packages' | sudo tee /usr/lib/python3/dist-packages/site-packages.pth
       #- run: ls ${{ env.pythonsite }}
@@ -78,18 +78,17 @@ jobs:
         run: echo "version=$(date -u --date="$(location version)" '+%Y%m%dT%H%M%SZ')" >> $GITHUB_ENV
 
       - run: git clone --depth 1 https://git.torproject.org/tor.git
-      - working-directory: ./tor/scripts/maint/geoip/geoip-db-tool
+      - working-directory: tor/scripts/maint/geoip/geoip-db-tool
         run: |
           cargo --version
           cargo run --release -- -i ${{ github.workspace }}/public/geoip-dump.txt
-      - run: mv ./tor/scripts/maint/geoip/geoip-db-tool/geoip{,6} ./public/
-      - working-directory: ./tor/scripts/maint/geoip/geoip-db-tool
+      - run: mv -f tor/scripts/maint/geoip/geoip-db-tool/geoip{,6} public/
+      - working-directory: tor/scripts/maint/geoip/geoip-db-tool
         run: cargo run --release -- -i ${{ github.workspace }}/public/geoip-dump.txt --include-asn --output-asn asn.txt
-      - run: mv ./tor/scripts/maint/geoip/geoip-db-tool/asn.txt ./public/
-      - run: mv ./tor/scripts/maint/geoip/geoip-db-tool/geoip ./public/geoip-plus-asn
-      - run: mv ./tor/scripts/maint/geoip/geoip-db-tool/geoip6 ./public/geoip6-plus-asn
-      - run: echo "${{ env.version }}" > ./version
-      - run: cp ./version ./public/
+      - run: mv -f tor/scripts/maint/geoip/geoip-db-tool/asn.txt public/
+      - run: mv -f tor/scripts/maint/geoip/geoip-db-tool/geoip public/geoip-plus-asn
+      - run: mv -f tor/scripts/maint/geoip/geoip-db-tool/geoip6 public/geoip6-plus-asn
+      - run: echo "${{ env.version }}" > public/version
 
       - name: Commit and push changes
         uses: EndBug/add-and-commit@v9
@@ -97,10 +96,10 @@ jobs:
           message: 'Action commit'
           add: 'version'
 
-      - run: sudo rm -f ./public/geoip-dump.txt
-      - run: sudo chown root:root ./public/*
-      - run: sudo chmod 0644 ./public/*
-      - run: ls -la ./public
+      - run: sudo rm -f public/geoip-dump.txt
+      - run: sudo chown root:root public/*
+      - run: sudo chmod 0644 public/*
+      - run: ls -la public
 
       - name: tar files
         run: |
