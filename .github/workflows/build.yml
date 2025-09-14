@@ -71,6 +71,7 @@ jobs:
           echo '/usr/lib/python3.10/site-packages' | sudo tee /usr/lib/python3/dist-packages/site-packages.pth
       #- run: ls ${{ env.pythonsite }}
       #- run: PYTHONPATH=${{ env.pythonsite }} location --quiet update
+      - run: location --version
       - run: sudo rm -f /var/lib/location/database.db
       - run: sudo location --quiet update
       - run: location dump ${{ github.workspace }}/public/geoip-dump.txt
