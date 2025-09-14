@@ -68,6 +68,8 @@ jobs:
           ./configure CFLAGS='-g -O0' --prefix=/usr --libdir=/usr/lib/x86_64-linux-gnu --includedir=/usr/include --sysconfdir=/etc --localstatedir=/var --with-python_prefix=/usr --with-python_exec_prefix=/usr --disable-lua --disable-man-pages
           make -j$(nproc --all) all
           sudo make install
+          cd ..
+          rm -fr libloc
           echo '/usr/lib/python3.10/site-packages' | sudo tee /usr/lib/python3/dist-packages/site-packages.pth
       #- run: ls ${{ env.pythonsite }}
       #- run: PYTHONPATH=${{ env.pythonsite }} location --quiet update
