@@ -56,12 +56,14 @@ jobs:
           echo "PATH="$HOME/.cargo/bin:$PATH"" >> $GITHUB_ENV
           rm -f /tmp/install_rust_tmp.sh
 
-      - run: wget "https://source.ipfire.org/releases/libloc/libloc-0.9.18.tar.gz"
-      - run: echo "16c76689fa0ea8ece4fca6abcf942f236c48440387bee1d9331ea937ccd7b87d  libloc-0.9.18.tar.gz" | sha256sum -c
-      - run: tar -xof libloc-0.9.18.tar.gz
+      #- run: wget "https://source.ipfire.org/releases/libloc/libloc-0.9.18.tar.gz"
+      #- run: echo "16c76689fa0ea8ece4fca6abcf942f236c48440387bee1d9331ea937ccd7b87d  libloc-0.9.18.tar.gz" | sha256sum -c
+      #- run: tar -xof libloc-0.9.18.tar.gz
       - name: Install libloc
-        working-directory: libloc-0.9.18
+        #working-directory: libloc-0.9.18
         run: |
+          git clone "https://git.ipfire.org/pub/git/location/libloc.git"
+          cd libloc
           ./autogen.sh
           ./configure CFLAGS='-g -O0' --prefix=/usr --libdir=/usr/lib/x86_64-linux-gnu --includedir=/usr/include --sysconfdir=/etc --localstatedir=/var --with-python_prefix=/usr --with-python_exec_prefix=/usr --disable-lua --disable-man-pages
           make -j$(nproc --all) all
