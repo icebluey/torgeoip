@@ -40,9 +40,9 @@ jobs:
         run: date -u -R
       - name: current dir
         run: pwd; /bin/ls -lah
+      - name: github.workspace
+        run: pwd; ls -lah ${{ github.workspace }}
       - run: mkdir public
-      - name: ${{ github.workspace }}
-        run: ls -lah ${{ github.workspace }}
       - run: sudo apt update -y -qqq
       - run: sudo apt autoremove --purge -y -qqq needrestart || true
       - run: sudo ln -svf ../usr/share/zoneinfo/UTC /etc/localtime; sudo DEBIAN_FRONTEND=noninteractive apt install -y tzdata; sudo dpkg-reconfigure --frontend noninteractive tzdata
@@ -80,12 +80,10 @@ jobs:
       #- run: version=$(date -u --date="$(PYTHONPATH=/usr/lib/python3.10/site-packages location version)" '+%Y%m%dT%H%M%SZ')
       - name: Set version env variable
         run: echo "version=$(date -u --date="$(location version)" '+%Y%m%dT%H%M%SZ')" >> $GITHUB_ENV
-
+      - run: cargo --version
       - run: git clone --depth 1 https://git.torproject.org/tor.git
       - working-directory: tor/scripts/maint/geoip/geoip-db-tool
-        run: |
-          cargo --version
-          cargo run --release -- -i ${{ github.workspace }}/public/geoip-dump.txt
+        run: cargo run --release -- -i ${{ github.workspace }}/public/geoip-dump.txt
       - run: mv -f tor/scripts/maint/geoip/geoip-db-tool/geoip{,6} public/
       - working-directory: tor/scripts/maint/geoip/geoip-db-tool
         run: cargo run --release -- -i ${{ github.workspace }}/public/geoip-dump.txt --include-asn --output-asn asn.txt
