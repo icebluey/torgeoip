@@ -50,7 +50,8 @@ jobs:
 
       - name: Install latest stable rust version
         run: |
-          /bin/rm -vfr "$HOME/.cargo" "$HOME/.rustup"
+          /bin/rm -fr "$HOME/.cargo" "$HOME/.rustup"
+          /bin/rm -fr ~/.cargo ~/.rustup
           curl --proto '=https' --tlsv1.3 -sSf https://sh.rustup.rs -o /tmp/install_rust_tmp.sh
           bash /tmp/install_rust_tmp.sh -y
           echo "PATH="$HOME/.cargo/bin:$PATH"" >> $GITHUB_ENV
