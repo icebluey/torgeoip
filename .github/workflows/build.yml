@@ -46,6 +46,7 @@ jobs:
       - run: sudo apt update -y -qqq
       - run: sudo apt autoremove --purge -y -qqq needrestart || true
       - run: sudo ln -svf ../usr/share/zoneinfo/UTC /etc/localtime; sudo DEBIAN_FRONTEND=noninteractive apt install -y tzdata; sudo dpkg-reconfigure --frontend noninteractive tzdata
+      - run: sudo apt install -y -qqq chrony; sleep 2; sudo systemctl start chrony; sleep 2; sudo chronyc sources; sleep 2; sudo chronyc tracking; sudo chronyc makestep; sleep 1; sudo hwclock -w
       - run: sudo apt install -y -qqq build-essential debhelper dh-python git asciidoc intltool libpython3-dev libssl-dev libsystemd-dev python3-dev pkg-config systemd xsltproc docbook-xsl wget
 
       - name: Install latest stable rust version
