@@ -67,8 +67,8 @@ jobs:
           git clone "https://git.ipfire.org/pub/git/location/libloc.git"
           cd libloc
           ./autogen.sh
-          CC=gcc CXX=g++ ./configure CFLAGS='-g -O0' --prefix=/usr --libdir=/usr/lib/x86_64-linux-gnu --includedir=/usr/include --sysconfdir=/etc --localstatedir=/var --with-python_prefix=/usr --with-python_exec_prefix=/usr --disable-lua --disable-man-pages
-          CC=gcc CXX=g++ make -j$(nproc --all) all && sudo make install
+          export CC=gcc; export CXX=g++; ./configure CFLAGS='-g -O0' --prefix=/usr --libdir=/usr/lib/x86_64-linux-gnu --includedir=/usr/include --sysconfdir=/etc --localstatedir=/var --with-python_prefix=/usr --with-python_exec_prefix=/usr --disable-lua --disable-man-pages
+          export CC=gcc; export CXX=g++; make -j$(nproc --all) all && sudo make install
           sudo rm -f /usr/lib/x86_64-linux-gnu/libloc.la && sudo ldconfig
           cd ..
           rm -fr libloc
