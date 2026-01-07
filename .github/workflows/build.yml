@@ -109,7 +109,8 @@ jobs:
       - name: tar files
         run: |
           cd public
-          tar --format=gnu -cvf - * | xz -T$(nproc) -f -z -9 > ../geoip.tar.xz
+          sudo tar --format=gnu -cvf - * | sudo xz -T$(nproc) -f -z -9 > ../geoip.tar.xz
+          sleep 2; sudo chmod 0644 ../geoip.tar.xz
 
       - name: Create Release
         id: create_release
@@ -120,5 +121,5 @@ jobs:
           name: "${{ env.version }}"
           draft: false
           prerelease: false
-          files: |
-            geoip.tar.xz
+          files: geoip.tar.xz
+          overwrite_files: true
