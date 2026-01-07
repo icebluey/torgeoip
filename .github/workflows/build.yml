@@ -28,7 +28,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           submodules: recursive
           fetch-depth: 0
@@ -43,11 +43,12 @@ jobs:
       - name: github.workspace
         run: pwd; ls -lah ${{ github.workspace }}
       - run: mkdir public
-      - run: sudo apt update -y -qqq
-      - run: sudo apt autoremove --purge -y -qqq needrestart || true
-      - run: sudo ln -svf ../usr/share/zoneinfo/UTC /etc/localtime; sudo DEBIAN_FRONTEND=noninteractive apt install -y tzdata; sudo dpkg-reconfigure --frontend noninteractive tzdata
-      - run: sudo apt install -y -qqq chrony; sleep 2; sudo systemctl start chrony; sleep 2; sudo chronyc sources; sleep 2; sudo chronyc tracking; sudo chronyc makestep; sleep 1; sudo hwclock -w
-      - run: sudo apt install -y -qqq build-essential debhelper dh-python git asciidoc intltool libpython3-dev libssl-dev libsystemd-dev python3-dev pkg-config systemd xsltproc docbook-xsl wget
+      - run: >
+          sudo apt update -y -qqq;
+          sudo apt autoremove --purge -y -qqq needrestart || true;
+          sudo ln -svf ../usr/share/zoneinfo/UTC /etc/localtime; sudo DEBIAN_FRONTEND=noninteractive apt install -y tzdata; sudo dpkg-reconfigure --frontend noninteractive tzdata;
+          sudo apt install -y -qqq chrony; sleep 2; sudo systemctl start chrony; sleep 5; sudo chronyc sources; sleep 5; sudo chronyc tracking; sudo chronyc makestep; sleep 1; sudo hwclock -w;
+          sudo apt install -y -qqq build-essential debhelper dh-python git asciidoc intltool libpython3-dev libssl-dev libsystemd-dev python3-dev pkg-config systemd xsltproc docbook-xsl wget openssl
 
       - name: Install latest stable rust version
         run: |
@@ -104,13 +105,15 @@ jobs:
           sudo rm -f public/geoip-dump.txt
           sudo chown root:root public/*
           sudo chmod 0644 public/*
-          ls -la public
+          /bin/ls -la public
 
       - name: tar files
         run: |
           cd public
-          sudo tar --format=gnu -cvf - * | sudo xz -T$(nproc) -f -z -9 > ../geoip.tar.xz
+          sudo /bin/ls -lah
+          sudo tar --format=gnu -cf - * | sudo xz -T$(nproc) -f -z -9 > ../geoip.tar.xz
           sleep 2; sudo chmod 0644 ../geoip.tar.xz
+          sudo /bin/ls -lah ../
 
       - name: Create Release
         id: create_release
