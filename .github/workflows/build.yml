@@ -101,18 +101,15 @@ jobs:
           message: 'Action commit'
           add: 'version'
 
-      - run: |
-          sudo rm -f public/geoip-dump.txt
-          sudo chown root:root public/*
-          sudo chmod 0644 public/*
-          /bin/ls -la public
-
       - name: tar files
         run: |
+          sudo /bin/rm -f public/geoip-dump.txt
+          sudo chown root:root public/*
+          sudo chmod 0644 public/*
           cd public
           sudo /bin/ls -lah
           sudo tar --format=gnu -cf - * | sudo xz -T$(nproc) -f -z -9 > ../geoip.tar.xz
-          sleep 2; sudo chmod 0644 ../geoip.tar.xz
+          sleep 2; sudo chown root:root ../geoip.tar.xz; sudo chmod 0644 ../geoip.tar.xz
           sudo /bin/ls -lah ../
 
       - name: Create Release
