@@ -47,8 +47,8 @@ jobs:
           sudo apt update -y -qqq;
           sudo apt autoremove --purge -y -qqq needrestart || true;
           sudo ln -svf ../usr/share/zoneinfo/UTC /etc/localtime; sudo DEBIAN_FRONTEND=noninteractive apt install -y tzdata; sudo dpkg-reconfigure --frontend noninteractive tzdata;
-          sudo apt install -y -qqq bash wget ca-certificates curl git openssl binutils coreutils util-linux findutils diffutils patch sed gawk grep file gzip bzip2 xz-utils tar;
-          sudo apt reinstall -y -qqq bash wget ca-certificates curl git openssl binutils coreutils util-linux findutils diffutils patch sed gawk grep file gzip bzip2 xz-utils tar;
+          sudo apt install -y -qqq bash wget ca-certificates curl git openssl binutils coreutils util-linux findutils diffutils patch sed gawk grep file gzip bzip2 xz-utils tar util-linux-extra;
+          sudo apt reinstall -y -qqq bash wget ca-certificates curl git openssl binutils coreutils util-linux findutils diffutils patch sed gawk grep file gzip bzip2 xz-utils tar util-linux-extra;
           sudo apt install -y -qqq chrony; sleep 2; sudo systemctl start chrony; sleep 5; sudo chronyc sources; sleep 5; sudo chronyc tracking; sudo chronyc makestep; sleep 1; sudo hwclock -w;
           sudo apt install -y -qqq build-essential debhelper dh-python git asciidoc intltool libpython3-dev libssl-dev libsystemd-dev python3-dev pkg-config systemd xsltproc docbook-xsl;
           sudo apt reinstall -y -qqq build-essential debhelper dh-python git asciidoc intltool libpython3-dev libssl-dev libsystemd-dev python3-dev pkg-config systemd xsltproc docbook-xsl
