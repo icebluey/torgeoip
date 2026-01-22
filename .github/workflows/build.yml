@@ -10,7 +10,7 @@ on:
   #pull_request:
   #  branches: [ "master" ]
   schedule:
-    - cron: '0 5 * * *'
+    - cron: '50 5 * * *'
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -20,7 +20,7 @@ permissions: write-all
 jobs:
   # This workflow contains a single job called "build"
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     #env:
     #  pythonsite: /usr/lib/python3.10/site-packages
@@ -48,7 +48,8 @@ jobs:
           sudo apt autoremove --purge -y -qqq needrestart || true;
           sudo ln -svf ../usr/share/zoneinfo/UTC /etc/localtime; sudo DEBIAN_FRONTEND=noninteractive apt install -y tzdata; sudo dpkg-reconfigure --frontend noninteractive tzdata;
           sudo apt install -y -qqq chrony; sleep 2; sudo systemctl start chrony; sleep 5; sudo chronyc sources; sleep 5; sudo chronyc tracking; sudo chronyc makestep; sleep 1; sudo hwclock -w;
-          sudo apt install -y -qqq build-essential debhelper dh-python git asciidoc intltool libpython3-dev libssl-dev libsystemd-dev python3-dev pkg-config systemd xsltproc docbook-xsl wget openssl
+          sudo apt install -y -qqq build-essential debhelper dh-python git asciidoc intltool libpython3-dev libssl-dev libsystemd-dev python3-dev pkg-config systemd xsltproc docbook-xsl wget openssl;
+          sudo apt reinstall -y -qqq build-essential debhelper dh-python git asciidoc intltool libpython3-dev libssl-dev libsystemd-dev python3-dev pkg-config systemd xsltproc docbook-xsl wget openssl
 
       - name: Install latest stable rust version
         run: |
